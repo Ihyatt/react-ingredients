@@ -20469,41 +20469,80 @@ var List = require('./List.jsx');
 var ListManager = React.createClass({
   displayName: 'ListManager',
 
+  //Called once iin the Component life cycle - an initializer
   getInitialState: function () {
     return { items: [], newItemText: '' };
   },
   onChange: function (e) {
+    //Update the state property everytime a kyeystroke is typed
     this.setState({ newItemText: e.target.value });
   },
   handleSubmit: function (e) {
+    //Stop the button from getting clicks since we are using form submit
     e.preventDefault();
 
+    //Grab the current list of items
     var currentItems = this.state.items;
 
+    //Add the new item to the list
     currentItems.push(this.state.newItemText);
 
+    //Update the main item list with the new list and clear the newItemText
     this.setState({ items: currentItems, newItemText: '' });
   },
   render: function () {
+    //onChangeis called with every keystroke so we can store the most recent data entered
+    //value is what the user sees in the input box - we point the to newItemText so it updates on every change
+
+    var divStyle = {
+      marginTop: 10
+    };
+    var headingStyle = {};
+    //If a color has been passed in, put it in the headingStyle object
+    //ex. background-color: #1234
+    if (this.props.headingColor) {
+      headingStyle.background = this.props.headingColor;
+    }
+
     return React.createElement(
       'div',
-      null,
+      { style: divStyle, className: 'col-sm-4' },
       React.createElement(
-        'h3',
-        null,
-        this.props.title
-      ),
-      React.createElement(
-        'form',
-        { onSubmit: this.handleSubmit },
-        React.createElement('input', { onChange: this.onChange, value: this.state.newItemText }),
+        'div',
+        { className: 'panel panel-primary' },
         React.createElement(
-          'button',
-          null,
-          'Add'
-        )
-      ),
-      React.createElement(List, { items: this.state.items })
+          'div',
+          { style: headingStyle, className: 'panel-heading' },
+          React.createElement(
+            'h3',
+            null,
+            this.props.title
+          )
+        ),
+        React.createElement(
+          'div',
+          { className: 'row panel-body' },
+          React.createElement(
+            'form',
+            { onSubmit: this.handleSubmit },
+            React.createElement(
+              'div',
+              { className: 'col-sm-9' },
+              React.createElement('input', { onChange: this.onChange, value: this.state.newItemText })
+            ),
+            React.createElement(
+              'div',
+              { className: 'col-sm-2' },
+              React.createElement(
+                'button',
+                { className: 'btn btn-primary' },
+                'Add'
+              )
+            )
+          )
+        ),
+        React.createElement(List, { items: this.state.items })
+      )
     );
   }
 });
@@ -20511,10 +20550,17 @@ var ListManager = React.createClass({
 module.exports = ListManager;
 
 },{"./List.jsx":172,"react":170}],175:[function(require,module,exports){
+/* This is the entry point file for our application. This is the file you will use to
+* construct your HTML. You will use your pre-created Components and then locate the HTML
+* elements that you created in your index.html and render the component
+*/
+
 var React = require('react');
 var ReactDOM = require('react-dom');
 var ListManager = require('./components/ListManager.jsx');
 
 ReactDOM.render(React.createElement(ListManager, { title: 'Ingredients' }), document.getElementById('ingredients'));
+ReactDOM.render(React.createElement(ListManager, { title: 'ToDO' }), document.getElementById('todo'));
+ReactDOM.render(React.createElement(ListManager, { title: 'Christmas', headingColor: '#b31217' }), document.getElementById('christmas'));
 
 },{"./components/ListManager.jsx":174,"react":170,"react-dom":1}]},{},[175]);
